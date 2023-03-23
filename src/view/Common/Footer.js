@@ -9,7 +9,7 @@ export default class Footer extends WebComponent {
     this.addEventListener('click', this.handleClick.bind(this));
   }
 
-  getHTML() {
+  injectHTML() {
     return html`
       <img alt="window_logo" src="/windowLogo.png" class="window_icon" />
       <div class="input_box">

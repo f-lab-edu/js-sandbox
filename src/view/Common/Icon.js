@@ -2,7 +2,7 @@ import { html } from '../../utils/utils';
 import WebComponent from '../../core/WebComponent';
 
 export default class Icon extends WebComponent {
-  getHTML() {
+  injectHTML() {
     const { label, iconsrc } = this.dataset;
     return html`
       <img alt="${label}_icon" src=${iconsrc} />

@@ -13,7 +13,7 @@ export default class App extends WebComponent {
     window.addEventListener('popstate', () => router.render());
   }
 
-  getHTML() {
+  injectHTML() {
     return html`
       <my-icons slot="icons" tabindex="-1"></my-icons>
       <my-footer slot="footer"></my-footer>

@@ -11,7 +11,7 @@ export default class Icons extends WebComponent {
     this.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
-  getHTML() {
+  injectHTML() {
     return html`
       ${icons
         .map((icon) => {
