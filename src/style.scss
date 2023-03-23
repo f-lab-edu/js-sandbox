@@ -79,22 +79,22 @@ select {
   text-transform: none;
 }
 button,
-[type="button"],
-[type="reset"],
-[type="submit"] {
+[type='button'],
+[type='reset'],
+[type='submit'] {
   -webkit-appearance: button;
 }
 button::-moz-focus-inner,
-[type="button"]::-moz-focus-inner,
-[type="reset"]::-moz-focus-inner,
-[type="submit"]::-moz-focus-inner {
+[type='button']::-moz-focus-inner,
+[type='reset']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
   border-style: none;
   padding: 0;
 }
 button:-moz-focusring,
-[type="button"]:-moz-focusring,
-[type="reset"]:-moz-focusring,
-[type="submit"]:-moz-focusring {
+[type='button']:-moz-focusring,
+[type='reset']:-moz-focusring,
+[type='submit']:-moz-focusring {
   outline: 1px dotted ButtonText;
 }
 fieldset {
@@ -114,20 +114,20 @@ progress {
 textarea {
   overflow: auto;
 }
-[type="checkbox"],
-[type="radio"] {
+[type='checkbox'],
+[type='radio'] {
   box-sizing: border-box; /* 1 */
   padding: 0; /* 2 */
 }
-[type="number"]::-webkit-inner-spin-button,
-[type="number"]::-webkit-outer-spin-button {
+[type='number']::-webkit-inner-spin-button,
+[type='number']::-webkit-outer-spin-button {
   height: auto;
 }
-[type="search"] {
+[type='search'] {
   -webkit-appearance: textfield; /* 1 */
   outline-offset: -2px; /* 2 */
 }
-[type="search"]::-webkit-search-decoration {
+[type='search']::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 ::-webkit-file-upload-button {
@@ -146,11 +146,6 @@ template {
 [hidden] {
   display: none;
 }
-body {
-  background-image: url("/public/background.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-}
 
 // 여기부터 추가된 CSS속성입니다.
 body,
@@ -159,20 +154,137 @@ html {
   width: 100vw;
   margin: 0;
   padding: 0;
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 16px;
   overflow: hidden;
+}
+
+body {
+  background-image: url('/public/background.png');
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("/public/background.png");
 }
 
 my-app {
-  display: block;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
-}
 
-my-home {
-  height: 100%;
+  #page {
+    display: flex;
+    height: 100%;
+    width: 100%;
+
+    & > * {
+      z-index: 1;
+    }
+  }
+
+  & > my-icons {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    top: 0;
+    outline: none;
+
+    my-icon {
+      height: 120px;
+      width: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+      border: 1px solid rgba(0, 0, 0, 0);
+      color: white;
+      font-size: large;
+      user-select: none;
+
+      img {
+        margin: auto;
+        width: 80%;
+      }
+
+      .icon_name {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        height: 20%;
+      }
+
+      &[checked] {
+        background-color: rgba(129, 159, 217, 0.5);
+        border: 1px solid rgba(122, 170, 255, 0.7);
+      }
+      &:hover {
+        background-color: rgba(129, 159, 217, 0.2);
+        border: 1px solid rgba(122, 170, 255, 0.4);
+      }
+      &[checked]:hover {
+        background-color: rgba(129, 159, 217, 0.8);
+        border: 1px solid rgba(122, 170, 255, 0.7);
+      }
+    }
+  }
+
+  & > my-footer {
+    height: 45px;
+    min-height: 45px;
+    width: 100%;
+    background-color: #1a1a1a;
+    color: white;
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+
+    .window_icon {
+      height: 20px;
+      width: 20px;
+      margin: 0 15px;
+    }
+
+    my-icon {
+      width: 40px;
+      display: flex;
+      padding: 0 5px;
+
+      &:hover {
+        background-color: rgba(129, 159, 217, 0.2);
+      }
+
+      img {
+        width: 100%;
+      }
+    }
+
+    .input_box {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      width: 300px;
+      margin: 0 5px;
+      background: white;
+      box-sizing: border-box;
+      border: 1px solid #a9a9a9;
+
+      input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        background: none;
+        font-size: 16px;
+        box-sizing: border-box;
+
+        &::placeholder {
+          color: #a9a9a9;
+        }
+      }
+
+      &:focus-within {
+        border: 1px solid rgba(122, 170, 255);
+      }
+    }
+  }
 }
