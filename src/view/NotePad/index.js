@@ -5,7 +5,6 @@ import './styles.scss';
 export default class NotePad extends WebComponent {
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('fullScreen', this.handleFullScreen.bind(this));
   }
 
   getHTML() {
@@ -13,9 +12,5 @@ export default class NotePad extends WebComponent {
       <my-notepad-header></my-notepad-header>
       <my-notepad-body></my-notepad-body>
     `;
-  }
-
-  handleFullScreen() {
-    this.classList.toggle('fullscreen');
   }
 }
