@@ -1,6 +1,7 @@
 import { html } from '../../../utils/utils';
 import WebComponent from '../../../core/WebComponent';
 import buttons from '../const/buttons';
+import NotePadIcon from '../../../../public/notepad.png';
 
 export default class NotePadHeader extends WebComponent {
   connectedCallback() {
@@ -10,7 +11,7 @@ export default class NotePadHeader extends WebComponent {
   getHTML() {
     return html`
       <header>
-        <span><img alt="notepad_icon" src="/notepad.png" />제목없음 - Windows 메모장</span>
+        <span><img alt="notepad_icon" src=${NotePadIcon} />제목없음 - Windows 메모장</span>
         <div class="view_buttons">
           <button id="mini">🗕</button>
           <button id="full">🗖</button>
