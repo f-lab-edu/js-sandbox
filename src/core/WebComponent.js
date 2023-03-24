@@ -1,33 +1,21 @@
-import { html } from "../utils/utils";
+import { html } from '../utils/utils';
 
 export default class WebComponent extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: "open" });
-    this.template = document.createElement("template");
-    this.template.innerHTML = html`
-      <style>
-        ${this.shadowStyle()}
-      </style>
-      ${this.shadowHTML()}
-    `;
+    this.template = document.createElement('template');
+    this.template.innerHTML = this.injectHTML();
   }
 
   connectedCallback() {
-    this.shadowRoot.appendChild(this.template.content.cloneNode(true));
-    this.setEvents();
+    this.render();
   }
 
-  // shadowRoot css 정의
-  shadowStyle() {
-    return "";
+  render() {
+    this.append(this.template.content.cloneNode(true));
   }
 
-  // shadowRoot html 정의
-  shadowHTML() {
-    return "";
+  injectHTML() {
+    return ``;
   }
-
-  // 이벤트 정의
-  setEvents() {}
 }
