@@ -15,7 +15,7 @@ class IndexedDB {
 
   /**
    * DB 오픈 메서드
-   * @returns {void}
+   * @returns {Promise<void>}
    */
   async openDB() {
     return new Promise((resolve, reject) => {
@@ -65,7 +65,7 @@ class IndexedDB {
   /**
    * 데이터 전체 조회 메서드
    * @param {string} storeName
-   * @returns {object[]}
+   * @returns {Promise<object[]>}
    */
   async getAllData(storeName) {
     return new Promise((resolve, reject) => {
@@ -105,6 +105,7 @@ class IndexedDB {
    * 데이터 삭제 메서드
    * @param {string} storeName
    * @param {number} id
+   * @returns {Promise<object>}
    */
   async deleteData(storeName, id) {
     return new Promise((resolve, reject) => {
