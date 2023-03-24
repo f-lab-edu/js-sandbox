@@ -34,9 +34,10 @@ class IndexedDB {
         this.db = request.result;
 
         this.stores.forEach((store) => {
-          if (!this.db.objectStoreNames.contains(store)) {
-            this.db.createObjectStore(store, { keyPath: 'id' });
+          if (this.db.objectStoreNames.contains(store)) {
+            this.db.deleteObjectStore(store);
           }
+          this.db.createObjectStore(store, { keyPath: 'id', autoIncrement: true });
         });
       };
     });
@@ -122,6 +123,6 @@ class IndexedDB {
   }
 }
 
-const sandboxDB = new IndexedDB('sandbox', 1, ['notes']);
+const sandboxDB = new IndexedDB('sandboxDB', 2, ['notepad']);
 
 export default sandboxDB;
