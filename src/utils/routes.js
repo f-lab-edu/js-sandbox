@@ -1,4 +1,7 @@
 import { html } from './utils';
+import tetris from '../../public/tetris.png';
+import flappyBird from '../../public/flappyBird.png';
+import notepad from '../../public/notepad.png';
 
 const routes = [
   {
@@ -11,19 +14,19 @@ const routes = [
     path: '/tetris',
     html: html`<my-tetris></my-tetris>`,
     label: 'Tetris',
-    iconSrc: '/tetris.png',
+    iconSrc: tetris,
   },
   {
     path: '/flappybird',
     html: html`<my-flappybird></my-flappybird>`,
     label: 'Flappy&nbsp;Bird',
-    iconSrc: '/flappyBird.png',
+    iconSrc: flappyBird,
   },
   {
     path: '/notepad',
     html: html`<my-notepad></my-notepad>`,
     label: 'Note&nbsp;Pad',
-    iconSrc: '/notepad.png',
+    iconSrc: notepad,
   },
 ];
 
