@@ -48,8 +48,11 @@ export default class NotePad extends WebComponent {
 
     try {
       const result = await sandboxDB.upsertData('notepad', {
-        title: notePadData.title,
-        content: notePadData.content,
+        title: notePadData.title.replace(/ /g, '&nbsp;'),
+        content: notePadData.content
+          .replace(/ /g, '&nbsp;')
+          .replace(/\n/g, '<br>')
+          .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;'),
       });
       if (result) {
         alert('저장되었습니다.');
@@ -58,7 +61,7 @@ export default class NotePad extends WebComponent {
         new CustomEvent('iconChange', {
           detail: {
             path: `/notepad/${result}`,
-            label: notePadData.title,
+            label: notePadData.title.replace(/ /g, '&nbsp;'),
             iconSrc: NotePadIcon,
           },
         })
