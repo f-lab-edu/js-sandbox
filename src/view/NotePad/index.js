@@ -76,7 +76,7 @@ export default class NotePad extends WebComponent {
 
     let title;
     while (!title) {
-      title = prompt('파일명을 입력하세요.', this.data.title);
+      title = prompt('파일명을 입력하세요.', this.data.title.replace(/&nbsp;/g, ' '));
       if (!title) {
         const confirmResult = window.confirm('제목은 필수입니다.');
         if (!confirmResult) return null;
