@@ -29,4 +29,5 @@ import router from './core/Router';
   customElements.define('my-notepad-header', NotePadHeader);
 })();
 
+window.addEventListener('load', () => router.render());
 window.addEventListener('popstate', () => router.render());

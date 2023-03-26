@@ -10,30 +10,41 @@ const routes = [
     html: html`<my-home></my-home>`,
     label: 'Home',
     iconSrc: null,
+    tag: 'my-home',
   },
   {
     path: '/tetris',
     html: html`<my-tetris></my-tetris>`,
     label: 'Tetris',
     iconSrc: tetris,
+    tag: 'my-tetris',
   },
   {
     path: '/flappybird',
     html: html`<my-flappybird></my-flappybird>`,
     label: 'Flappy&nbsp;Bird',
     iconSrc: flappyBird,
+    tag: 'my-flappybird',
   },
   {
     path: '/notepad',
     html: html`<my-notepad></my-notepad>`,
     label: 'Note&nbsp;Pad',
     iconSrc: notepad,
+    tag: 'my-notepad',
+  },
+  {
+    path: '/notepad/:id',
+    html: html`<my-notepad></my-notepad>`,
+    label: 'Note&nbsp;Pad',
+    iconSrc: null,
+    tag: 'my-notepad',
   },
 ];
 
 const mainIcons = routes.reduce((prev, router) => {
   const { path, label, iconSrc } = router;
-  if (router.path === '/') return prev;
+  if (!router.iconSrc) return prev;
   return [...prev, { path, label, iconSrc }];
 }, []);
 
@@ -47,5 +58,7 @@ const getLocalIcons = async () => {
   return [...notepadIcons];
 };
 
+const BASE_URL = process.env.NODE_ENV === 'development' ? '' : '/js-sandbox';
+
 export default routes;
-export { mainIcons, getLocalIcons };
+export { mainIcons, getLocalIcons, BASE_URL };

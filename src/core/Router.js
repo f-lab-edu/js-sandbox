@@ -7,12 +7,23 @@ class Router {
     this.routes = route;
   }
 
+  pathToRegexp(path) {
+    return new RegExp(`^${path.replace(/\//g, '\\/').replace(/:\w+/g, '(.+)')}$`);
+  }
+
   render() {
-    const route = this.routes.find((value) => value.path === window.location.pathname.replace(BASE_URL, ''));
+    const route = this.routes.find(
+      (value) => window.location.pathname.replace(BASE_URL, '').match(this.pathToRegexp(value.path)) !== null
+    );
 
     if (!route) {
       this.replaceTo('/');
       return;
+    }
+
+    if (route.path.includes('/:id')) {
+      const id = window.location.pathname.replace(BASE_URL, '').match(/\d+/)[0];
+      route.html = route.html.replace(`${route.tag}`, `${route.tag} id="${id}"`);
     }
 
     document.querySelector('#page').innerHTML = route.html;
