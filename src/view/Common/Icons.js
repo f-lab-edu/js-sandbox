@@ -7,12 +7,10 @@ export default class Icons extends WebComponent {
   async connectedCallback() {
     this.icons = [...mainIcons, ...(await getLocalIcons())];
     super.connectedCallback();
-    this.addEventListener('click', this.handleClick.bind(this));
-    this.addEventListener('dblclick', this.handleDoubleClick.bind(this));
-    this.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.addEventListener('iconChange', (e) => {
-      this.icons = [...this.icons, e.detail];
-    });
+    this.addEventListener('click', this.handleClick);
+    this.addEventListener('dblclick', this.handleDoubleClick);
+    this.addEventListener('keydown', this.handleKeyDown);
+    this.addEventListener('iconChange', this.handleIconChange);
   }
 
   static get observedAttributes() {
@@ -69,6 +67,19 @@ export default class Icons extends WebComponent {
       if (checkedEl.length > 1) return;
       if (!checkedEl) return;
       router.navigateTo(checkedEl[0].dataset.path);
+    }
+  }
+
+  handleIconChange(e) {
+    const { path, label, iconSrc } = e.detail;
+    const prevIconIndex = this.icons.findIndex((icon) => icon.path === path);
+
+    if (prevIconIndex === -1) {
+      this.icons = [...this.icons, { path, label, iconSrc }];
+    } else {
+      const newIcons = [...this.icons];
+      newIcons[prevIconIndex] = { path, label, iconSrc };
+      this.icons = newIcons;
     }
   }
 }

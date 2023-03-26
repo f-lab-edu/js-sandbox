@@ -105,4 +105,8 @@ export default class NotePadHeader extends WebComponent {
   get title() {
     return this.getAttribute('title');
   }
+
+  get title() {
+    return this.getAttribute('title');
+  }
 }
