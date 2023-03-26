@@ -3,7 +3,6 @@ import { html } from '../../utils/utils';
 import './styles.scss';
 import sandboxDB from '../../core/IndexedDB';
 import NotePadIcon from '../../../public/notepad.png';
-import router from '../../core/Router';
 
 export default class NotePad extends WebComponent {
   async connectedCallback() {
