@@ -17,7 +17,10 @@ export default class NotePadHeader extends WebComponent {
   injectHTML() {
     return html`
       <header>
-        <span><img alt="notepad_icon" src=${NotePadIcon} />제목없음 - Windows 메모장</span>
+        <span>
+          <img alt="notepad_icon" src=${NotePadIcon} />
+          ${this.title} - Windows 메모장
+        </span>
         <div class="view_buttons">
           <button class="view_button" id="mini">🗕</button>
           <button class="view_button" id="full">🗖</button>
@@ -51,50 +54,55 @@ export default class NotePadHeader extends WebComponent {
   }
 
   handleClick(e) {
-    closePopup.call(this);
+    const viewButton = e.target.closest('.view_button');
+    const editButton = e.target.closest('.edit_button');
     const sub = e.target.closest('.sub');
+
+    if (viewButton) {
+      this.clickViewButton(viewButton);
+    } else if (editButton) {
+      this.clickEditButton(editButton, sub);
+    } else {
+      this.closePopup();
+    }
+  }
+
+  clickViewButton(viewButton) {
+    switch (viewButton.id) {
+      case 'full':
+        this.parentElement.classList.toggle('fullscreen');
+        break;
+      case 'mini':
+      case 'close':
+        router.back();
+        break;
+      default:
+        break;
+    }
+  }
+
+  clickEditButton(editButton, sub) {
+    this.closePopup();
     if (sub) {
       const slotId = Number(sub.dataset.id);
       const { onClick } = slots.find((slot) => slot.id === slotId) || {};
       if (onClick) {
         onClick.call(this);
-        return;
       }
+    } else {
+      const popup = editButton.querySelector('.popup');
+      popup.classList.toggle('show');
     }
+  }
 
-    switch (e.target.className) {
-      case 'view_button':
-        clickViewButton.call(this, e.target);
-        break;
-      case 'edit_button':
-        showPopup.call(this, e.target);
-        break;
-      default:
-        break;
+  closePopup() {
+    const popup = this.querySelector('.popup.show');
+    if (popup) {
+      popup.classList.remove('show');
     }
+  }
 
-    function clickViewButton(vTarget) {
-      switch (vTarget.id) {
-        case 'full':
-          this.parentElement.classList.toggle('fullscreen');
-          break;
-        case 'mini':
-        case 'close':
-          router.back();
-          break;
-        default:
-          break;
-      }
-    }
-
-    function showPopup(sTarget) {
-      this.querySelectorAll('.popup').forEach((popup) => {
-        popup.classList.toggle('show', popup === sTarget.querySelector('.popup'));
-      });
-    }
-
-    function closePopup() {
-      this.querySelector('.popup.show')?.classList.remove('show');
-    }
+  get title() {
+    return this.getAttribute('title');
   }
 }
