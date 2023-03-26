@@ -51,12 +51,15 @@ export default class NotePadHeader extends WebComponent {
   }
 
   handleClick(e) {
+    closePopup.call(this);
     const sub = e.target.closest('.sub');
     if (sub) {
       const slotId = Number(sub.dataset.id);
       const { onClick } = slots.find((slot) => slot.id === slotId) || {};
-      if (onClick) onClick.call(this);
-      return;
+      if (onClick) {
+        onClick.call(this);
+        return;
+      }
     }
 
     switch (e.target.className) {
@@ -84,13 +87,14 @@ export default class NotePadHeader extends WebComponent {
       }
     }
 
-    function showPopup(eTarget) {
-      eTarget.querySelector('.popup').classList.toggle('show');
-      this.querySelectorAll('.popup').forEach((node) => {
-        if (node !== eTarget.querySelector('.popup')) {
-          node.classList.remove('show');
-        }
+    function showPopup(sTarget) {
+      this.querySelectorAll('.popup').forEach((popup) => {
+        popup.classList.toggle('show', popup === sTarget.querySelector('.popup'));
       });
+    }
+
+    function closePopup() {
+      this.querySelector('.popup.show')?.classList.remove('show');
     }
   }
 }
