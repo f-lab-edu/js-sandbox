@@ -13,6 +13,7 @@ export default class NotePad extends WebComponent {
     super.connectedCallback();
     this.addEventListener('save', this.handleSave);
     this.addEventListener('localSave', this.handleLocalSave);
+    this.addEventListener('delete', this.handleDelete);
   }
 
   disconnectedCallback() {
@@ -62,6 +63,28 @@ export default class NotePad extends WebComponent {
       router.navigateTo(path);
     } catch (err) {
       alert('저장에 실패했습니다.');
+    }
+  }
+
+  async handleDelete(e) {
+    try {
+      e.stopPropagation();
+      const confirmResult = window.confirm('정말 삭제하시겠습니까?');
+      if (!confirmResult) return;
+
+      const result = await sandboxDB.deleteData('notepad', this.id);
+      if (!result) return;
+
+      alert('삭제되었습니다.');
+      const iconDeleteEvent = new CustomEvent('iconDelete', {
+        detail: {
+          path: `/notepad/${this.id}`,
+        },
+      });
+      document.querySelector('my-icons').dispatchEvent(iconDeleteEvent);
+      router.replaceTo('/notepad');
+    } catch (err) {
+      alert('삭제에 실패했습니다.');
     }
   }
 

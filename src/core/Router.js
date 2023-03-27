@@ -26,6 +26,7 @@ class Router {
   }
 
   navigateTo(url) {
+    if (url === window.location.pathname.replace(BASE_URL, '')) return;
     window.history.pushState(null, null, BASE_URL + url);
     this.render();
   }

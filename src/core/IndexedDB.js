@@ -116,7 +116,7 @@ class IndexedDB {
       const request = this.db.transaction(storeName, 'readwrite').objectStore(storeName).delete(id);
 
       request.onsuccess = () => {
-        resolve(request.result);
+        resolve(true);
       };
 
       request.onerror = (e) => {
