@@ -1,6 +1,4 @@
-import routes from '../utils/routes';
-
-const BASE_URL = process.env.NODE_ENV === 'development' ? '' : '/js-sandbox';
+import routes, { BASE_URL } from '../utils/routes';
 
 class Router {
   constructor(route) {
@@ -12,21 +10,19 @@ class Router {
   }
 
   render() {
-    const route = this.routes.find(
-      (value) => window.location.pathname.replace(BASE_URL, '').match(this.pathToRegexp(value.path)) !== null
-    );
+    const currentPath = window.location.pathname;
+    const route = this.routes.find((value) => this.pathToRegexp(value.path).test(currentPath));
 
     if (!route) {
       this.replaceTo('/');
       return;
     }
 
-    if (route.path.includes('/:id')) {
-      const id = window.location.pathname.replace(BASE_URL, '').match(/\d+/)[0];
-      route.html = route.html.replace(`${route.tag}`, `${route.tag} id="${id}"`);
-    }
+    document.querySelector('#page').innerHTML = route.html.replace(':id', this.getIdFromPath(currentPath));
+  }
 
-    document.querySelector('#page').innerHTML = route.html;
+  getIdFromPath(path) {
+    return path.match(/\d+/)?.[0];
   }
 
   navigateTo(url) {

@@ -4,41 +4,38 @@ import flappyBird from '../../public/flappyBird.png';
 import notepad from '../../public/notepad.png';
 import sandboxDB from '../core/IndexedDB';
 
+const BASE_URL = process.env.NODE_ENV === 'development' ? '' : '/js-sandbox';
+
 const routes = [
   {
-    path: '/',
+    path: `${BASE_URL}/`,
     html: html`<my-home></my-home>`,
     label: 'Home',
     iconSrc: null,
-    tag: 'my-home',
   },
   {
-    path: '/tetris',
+    path: `${BASE_URL}/tetris`,
     html: html`<my-tetris></my-tetris>`,
     label: 'Tetris',
     iconSrc: tetris,
-    tag: 'my-tetris',
   },
   {
-    path: '/flappybird',
+    path: `${BASE_URL}/flappybird`,
     html: html`<my-flappybird></my-flappybird>`,
     label: 'Flappy&nbsp;Bird',
     iconSrc: flappyBird,
-    tag: 'my-flappybird',
   },
   {
-    path: '/notepad',
+    path: `${BASE_URL}/notepad`,
     html: html`<my-notepad></my-notepad>`,
     label: 'Note&nbsp;Pad',
     iconSrc: notepad,
-    tag: 'my-notepad',
   },
   {
-    path: '/notepad/:id',
-    html: html`<my-notepad></my-notepad>`,
+    path: `${BASE_URL}/notepad/:id`,
+    html: html`<my-notepad id=":id"></my-notepad>`,
     label: 'Note&nbsp;Pad',
     iconSrc: null,
-    tag: 'my-notepad',
   },
 ];
 
@@ -57,8 +54,6 @@ const getLocalIcons = async () => {
 
   return [...notepadIcons];
 };
-
-const BASE_URL = process.env.NODE_ENV === 'development' ? '' : '/js-sandbox';
 
 export default routes;
 export { mainIcons, getLocalIcons, BASE_URL };
