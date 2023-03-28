@@ -86,7 +86,6 @@ export default class Icons extends WebComponent {
 
   handleIconDelete(e) {
     const { path } = e.detail;
-    const newIcons = this.icons.filter((icon) => icon.path !== path);
-    this.icons = newIcons;
+    this.icons = this.icons.filter((icon) => icon.path !== path);
   }
 }
