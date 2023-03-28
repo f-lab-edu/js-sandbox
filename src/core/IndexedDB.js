@@ -26,8 +26,9 @@ class IndexedDB {
         resolve();
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
 
       request.onupgradeneeded = () => {
@@ -57,8 +58,9 @@ class IndexedDB {
         resolve(request.result);
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
     });
   }
@@ -76,8 +78,9 @@ class IndexedDB {
         resolve(request.result);
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
     });
   }
@@ -96,8 +99,9 @@ class IndexedDB {
         resolve(request.result);
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
     });
   }
@@ -116,8 +120,9 @@ class IndexedDB {
         resolve(request.result);
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
     });
   }

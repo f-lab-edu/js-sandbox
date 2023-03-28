@@ -12,7 +12,11 @@ import NotePadHeader from './view/NotePad/components/NotePadHeader';
 import router from './core/Router';
 
 (async () => {
-  await sandboxDB.openDB();
+  try {
+    await sandboxDB.openDB();
+  } catch (e) {
+    queueMicrotask(() => alert('IndexedDB를 사용할 수 없습니다.'));
+  }
 
   customElements.define('my-app', App);
   customElements.define('my-footer', Footer);
