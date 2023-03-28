@@ -72,8 +72,7 @@ export default class NotePad extends WebComponent {
       const confirmResult = window.confirm('정말 삭제하시겠습니까?');
       if (!confirmResult) return;
 
-      const result = await sandboxDB.deleteData('notepad', this.id);
-      if (!result) return;
+      await sandboxDB.deleteData('notepad', this.id);
 
       alert('삭제되었습니다.');
       const iconDeleteEvent = new CustomEvent('iconDelete', {
