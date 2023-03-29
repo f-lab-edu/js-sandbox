@@ -3,10 +3,11 @@ import { html } from '../../utils/utils';
 import './styles.scss';
 import sandboxDB from '../../core/IndexedDB';
 import NotePadIcon from '../../../public/notepad.png';
+import router from '../../core/Router';
 
 export default class NotePad extends WebComponent {
   async connectedCallback() {
-    this.data = (await sandboxDB.getData('notepad', Number(this.getAttribute('id')))) ?? {
+    this.data = (await sandboxDB.getData('notepad', this.id)) ?? {
       title: '제목없음',
       content: '',
     };
@@ -37,7 +38,6 @@ export default class NotePad extends WebComponent {
     link.href = URL.createObjectURL(blob);
     link.download = `${notePadData.title}.txt`;
     link.click();
-    this.reset();
   }
 
   async handleSave(e) {
@@ -49,20 +49,21 @@ export default class NotePad extends WebComponent {
       const result = await sandboxDB.upsertData('notepad', notePadData);
       if (!result) return;
 
+      const path = `/notepad/${result}`;
+
       alert('저장되었습니다.');
       const iconChangeEvent = new CustomEvent('iconChange', {
         detail: {
-          path: `/notepad/${result}`,
+          path,
           label: notePadData.title.replace(/ /g, '&nbsp;'),
           iconSrc: NotePadIcon,
         },
       });
       document.querySelector('my-icons').dispatchEvent(iconChangeEvent);
+      router.navigateTo(path);
     } catch (err) {
       alert('저장에 실패했습니다.');
-      console.error(err);
     }
-    this.reset();
   }
 
   getNotePadData() {
@@ -75,7 +76,7 @@ export default class NotePad extends WebComponent {
 
     let title;
     while (!title) {
-      title = prompt('파일명을 입력하세요.', '제목없음');
+      title = prompt('파일명을 입력하세요.', this.data.title.replace(/&nbsp;/g, ' '));
       if (!title) {
         const confirmResult = window.confirm('제목은 필수입니다.');
         if (!confirmResult) return null;
@@ -83,12 +84,13 @@ export default class NotePad extends WebComponent {
     }
 
     return {
+      id: this.id,
       title: title.trim().replace(/ /g, '&nbsp;'),
       content: content.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;'),
     };
   }
 
-  reset() {
-    this.querySelector('textarea').value = '';
+  get id() {
+    return Number(this.getAttribute('id'));
   }
 }
