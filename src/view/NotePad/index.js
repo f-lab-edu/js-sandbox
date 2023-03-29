@@ -3,6 +3,7 @@ import { html } from '../../utils/utils';
 import './styles.scss';
 import sandboxDB from '../../core/IndexedDB';
 import NotePadIcon from '../../../public/notepad.png';
+import router from '../../core/Router';
 
 export default class NotePad extends WebComponent {
   async connectedCallback() {
@@ -47,7 +48,6 @@ export default class NotePad extends WebComponent {
       if (!notePadData) return;
 
       const result = await sandboxDB.upsertData('notepad', notePadData);
-      if (!result) return;
 
       const path = `/notepad/${result}`;
 
@@ -60,7 +60,13 @@ export default class NotePad extends WebComponent {
         },
       });
       document.querySelector('my-icons').dispatchEvent(iconChangeEvent);
-      router.navigateTo(path);
+
+      if (this.id === result) {
+        this.data = notePadData;
+        this.render();
+      } else {
+        router.navigateTo(path);
+      }
     } catch (err) {
       alert('저장에 실패했습니다.');
     }
@@ -107,11 +113,11 @@ export default class NotePad extends WebComponent {
     return {
       id: this.id,
       title: title.trim().replace(/ /g, '&nbsp;'),
-      content: content.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;'),
+      content: content.replace(/ /g, '&nbsp;'),
     };
   }
 
   get id() {
-    return Number(this.getAttribute('id'));
+    return Number(this.getAttribute('data-id'));
   }
 }

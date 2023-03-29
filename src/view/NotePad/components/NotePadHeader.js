@@ -104,14 +104,8 @@ export default class NotePadHeader extends WebComponent {
   }
 
   closePopup() {
-    // const popups = this.querySelectorAll('.popup.show');
-    // popups.forEach((popup) => popup.classList.remove('show'));
     const popup = this.querySelector('.popup.show');
     popup?.classList.remove('show');
-  }
-
-  get title() {
-    return this.getAttribute('title');
   }
 
   get title() {

@@ -84,15 +84,15 @@ function handleLocalSaveClick() {
 }
 
 function handleDeleteClick() {
-  const notepad = this.closest('my-notepad');
-  if (notepad.id === 0) return;
+  const notepad = document.querySelector('my-notepad');
+  if (!notepad['data-id']) return;
   this.dispatchEvent(new CustomEvent('delete', { bubbles: true }));
 }
 
 function handleNewClick() {
-  const notepad = this.closest('my-notepad');
-  if (notepad.id === 0) {
-    notepad.querySelector('textarea').value = '';
+  const notepad = document.querySelector('my-notepad');
+  if (!notepad['data-id']) {
+    notepad.render();
     return;
   }
   router.navigateTo('/notepad');
