@@ -26,6 +26,8 @@ class Router {
   }
 
   navigateTo(url) {
+    const basedUrl = `${BASE_URL}${url}`;
+    if (basedUrl === window.location.pathname) return;
     window.history.pushState(null, null, BASE_URL + url);
     this.render();
   }

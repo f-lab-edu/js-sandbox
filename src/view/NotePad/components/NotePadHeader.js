@@ -82,7 +82,6 @@ export default class NotePadHeader extends WebComponent {
   }
 
   clickEditButton(editButton, sub) {
-    this.closePopup();
     if (sub) {
       const slotId = Number(sub.dataset.id);
       const { onClick } = slots.find((slot) => slot.id === slotId) || {};
@@ -90,16 +89,29 @@ export default class NotePadHeader extends WebComponent {
         onClick.call(this);
       }
     } else {
-      const popup = editButton.querySelector('.popup');
-      popup.classList.toggle('show');
+      this.togglePopup(editButton);
+    }
+  }
+
+  togglePopup(editButton) {
+    const popup = editButton.querySelector('.popup');
+    if (popup.classList.contains('show')) {
+      popup.classList.remove('show');
+    } else {
+      this.closePopup();
+      popup.classList.add('show');
     }
   }
 
   closePopup() {
+    // const popups = this.querySelectorAll('.popup.show');
+    // popups.forEach((popup) => popup.classList.remove('show'));
     const popup = this.querySelector('.popup.show');
-    if (popup) {
-      popup.classList.remove('show');
-    }
+    popup?.classList.remove('show');
+  }
+
+  get title() {
+    return this.getAttribute('title');
   }
 
   get title() {

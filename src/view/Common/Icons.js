@@ -11,6 +11,7 @@ export default class Icons extends WebComponent {
     this.addEventListener('dblclick', this.handleDoubleClick);
     this.addEventListener('keydown', this.handleKeyDown);
     this.addEventListener('iconChange', this.handleIconChange);
+    this.addEventListener('iconDelete', this.handleIconDelete);
   }
 
   static get observedAttributes() {
@@ -81,5 +82,10 @@ export default class Icons extends WebComponent {
       newIcons[prevIconIndex] = { path, label, iconSrc };
       this.icons = newIcons;
     }
+  }
+
+  handleIconDelete(e) {
+    const { path } = e.detail;
+    this.icons = this.icons.filter((icon) => icon.path !== path);
   }
 }
