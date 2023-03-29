@@ -5,7 +5,11 @@ import sandboxDB from '../../core/IndexedDB';
 import NotePadIcon from '../../../public/notepad.png';
 
 export default class NotePad extends WebComponent {
-  connectedCallback() {
+  async connectedCallback() {
+    this.data = (await sandboxDB.getData('notepad', Number(this.getAttribute('id')))) ?? {
+      title: '제목없음',
+      content: '',
+    };
     super.connectedCallback();
     this.addEventListener('save', this.handleSave);
     this.addEventListener('localSave', this.handleLocalSave);
@@ -17,9 +21,10 @@ export default class NotePad extends WebComponent {
   }
 
   injectHTML() {
+    const { title, content } = this.data;
     return html`
-      <my-notepad-header></my-notepad-header>
-      <textarea></textarea>
+      <my-notepad-header title=${title}></my-notepad-header>
+      <textarea>${content}</textarea>
     `;
   }
 

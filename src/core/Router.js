@@ -1,21 +1,28 @@
-import routes from '../utils/routes';
-
-const BASE_URL = process.env.NODE_ENV === 'development' ? '' : '/js-sandbox';
+import routes, { BASE_URL } from '../utils/routes';
 
 class Router {
   constructor(route) {
     this.routes = route;
   }
 
+  pathToRegexp(path) {
+    return new RegExp(`^${path.replace(/\//g, '\\/').replace(/:\w+/g, '(.+)')}$`);
+  }
+
   render() {
-    const route = this.routes.find((value) => value.path === window.location.pathname.replace(BASE_URL, ''));
+    const currentPath = window.location.pathname;
+    const route = this.routes.find((value) => this.pathToRegexp(value.path).test(currentPath));
 
     if (!route) {
       this.replaceTo('/');
       return;
     }
 
-    document.querySelector('#page').innerHTML = route.html;
+    document.querySelector('#page').innerHTML = route.html.replace(':id', this.getIdFromPath(currentPath));
+  }
+
+  getIdFromPath(path) {
+    return path.match(/\d+/)?.[0];
   }
 
   navigateTo(url) {
