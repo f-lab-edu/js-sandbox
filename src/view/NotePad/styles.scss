@@ -1,0 +1,142 @@
+my-notepad {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 80%;
+  margin: auto;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+
+  &.fullscreen {
+    width: 100%;
+    height: 100%;
+  }
+
+  textarea {
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 5px;
+    background-color: #f0f0f0;
+    box-sizing: border-box;
+  }
+
+  textarea:focus {
+    outline: none;
+  }
+}
+
+my-notepad-header {
+  flex-direction: column;
+  row-gap: 4px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #c0c0c0;
+  font-size: 14px;
+  user-select: none;
+
+  u {
+    pointer-events: none;
+  }
+
+  & > header {
+    display: flex;
+    justify-content: space-between;
+
+    & > span {
+      display: flex;
+      align-items: center;
+      padding: 5px 5px;
+      white-space: nowrap;
+      overflow: hidden;
+
+      & > img {
+        width: 18px;
+        height: 18px;
+        padding: 0 5px;
+      }
+    }
+
+    & > .view_buttons {
+      display: flex;
+      flex-wrap: nowrap;
+
+      & > button {
+        border: none;
+        width: 40px;
+
+        &:hover {
+          background-color: #e0e0e0;
+        }
+      }
+
+      #close:hover {
+        background-color: #ff0000;
+        color: white;
+      }
+    }
+  }
+
+  .edit_buttons {
+    display: flex;
+    width: fit-content;
+
+    & > button {
+      position: relative;
+      padding: 2px 8px;
+      outline: none;
+      border: none;
+
+      & > .popup {
+        display: flex;
+        flex-direction: column;
+        visibility: hidden;
+        position: absolute;
+        background-color: #e0e0e0;
+        left: 0;
+        top: 100%;
+        padding: 3px;
+        border: 1px solid #c0c0c0;
+        box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.5);
+
+        &.show {
+          animation: fadeIn 0.2s;
+          visibility: visible;
+        }
+
+        & > .sub {
+          display: flex;
+          padding: 3px 30px 3px 40px;
+          justify-content: space-between;
+          column-gap: 80px;
+          flex-wrap: nowrap;
+          white-space: nowrap;
+
+          &[data-disable='true'] {
+            color: #9b9b9b;
+          }
+
+          &[data-disable='false']:hover {
+            background-color: rgb(141, 183, 255);
+          }
+        }
+      }
+
+      &:hover {
+        background-color: #e0e0e0;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

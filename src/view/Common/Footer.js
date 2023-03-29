@@ -1,7 +1,9 @@
 import WebComponent from '../../core/WebComponent';
 import { html } from '../../utils/utils';
-import { icons } from '../../utils/routes';
+import { mainIcons } from '../../utils/routes';
 import router from '../../core/Router';
+import windowLogo from '../../../public/windowLogo.png';
+import searchIcon from '../../../public/searchIcon.png';
 
 export default class Footer extends WebComponent {
   connectedCallback() {
@@ -9,13 +11,13 @@ export default class Footer extends WebComponent {
     this.addEventListener('click', this.handleClick.bind(this));
   }
 
-  getHTML() {
+  injectHTML() {
     return html`
-      <img alt="window_logo" src="/windowLogo.png" class="window_icon" />
+      <img alt="window_logo" src=${windowLogo} class="window_icon" />
       <div class="input_box">
-        <img alt="search" src="/searchIcon.png" class="window_icon" /><input type="text" placeholder="찾기" />
+        <img alt="search" src=${searchIcon} class="window_icon" /><input type="text" placeholder="찾기" />
       </div>
-      ${icons
+      ${mainIcons
         .map((icon) => {
           return html` <my-icon data-path="${icon.path}" data-iconSrc="${icon.iconSrc}"></my-icon> `;
         })

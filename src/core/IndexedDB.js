@@ -34,9 +34,10 @@ class IndexedDB {
         this.db = request.result;
 
         this.stores.forEach((store) => {
-          if (!this.db.objectStoreNames.contains(store)) {
-            this.db.createObjectStore(store, { keyPath: 'id' });
+          if (this.db.objectStoreNames.contains(store)) {
+            this.db.deleteObjectStore(store);
           }
+          this.db.createObjectStore(store, { keyPath: 'id' });
         });
       };
     });
@@ -89,14 +90,17 @@ class IndexedDB {
    */
   async upsertData(storeName, data) {
     return new Promise((resolve, reject) => {
-      const request = this.db.transaction(storeName, 'readwrite').objectStore(storeName).put(data);
+      const objectStore = this.db.transaction(storeName, 'readwrite').objectStore(storeName);
+      const modifiedData = { ...data, id: data.id || new Date().getTime() };
+      const request = objectStore.put(modifiedData);
 
       request.onsuccess = () => {
         resolve(request.result);
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
     });
   }
@@ -112,7 +116,7 @@ class IndexedDB {
       const request = this.db.transaction(storeName, 'readwrite').objectStore(storeName).delete(id);
 
       request.onsuccess = () => {
-        resolve(request.result);
+        resolve(true);
       };
 
       request.onerror = (e) => {
@@ -122,6 +126,6 @@ class IndexedDB {
   }
 }
 
-const sandboxDB = new IndexedDB('sandbox', 1, ['notes']);
+const sandboxDB = new IndexedDB('sandboxDB', 2, ['notepad']);
 
 export default sandboxDB;

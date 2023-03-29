@@ -7,17 +7,22 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
-    "build": "webpack"
+    "build": "cross-env NODE_ENV=production webpack",
+    "predeploy": "npm run build && copy .\\dist\\index.html .\\dist\\404.html",
+    "deploy": "gh-pages -d dist"
   },
+  "homepage": "https://f-lab-edu.github.io/js-sandbox/",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "css-loader": "^6.7.3",
     "eslint": "8.22.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "gh-pages": "^5.0.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.7.3",
     "prettier": "^2.8.4",

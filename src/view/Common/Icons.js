@@ -1,19 +1,31 @@
 import { html } from '../../utils/utils';
 import router from '../../core/Router';
 import WebComponent from '../../core/WebComponent';
-import { icons } from '../../utils/routes';
+import { getLocalIcons, mainIcons } from '../../utils/routes';
 
 export default class Icons extends WebComponent {
-  connectedCallback() {
+  async connectedCallback() {
+    this.icons = [...mainIcons, ...(await getLocalIcons())];
     super.connectedCallback();
-    this.addEventListener('click', this.handleClick.bind(this));
-    this.addEventListener('dblclick', this.handleDoubleClick.bind(this));
-    this.addEventListener('keydown', this.handleKeyDown.bind(this));
+    this.addEventListener('click', this.handleClick);
+    this.addEventListener('dblclick', this.handleDoubleClick);
+    this.addEventListener('keydown', this.handleKeyDown);
+    this.addEventListener('iconChange', this.handleIconChange);
+    this.addEventListener('iconDelete', this.handleIconDelete);
   }
 
-  getHTML() {
+  static get observedAttributes() {
+    return ['icons'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
+    this.render();
+  }
+
+  injectHTML() {
     return html`
-      ${icons
+      ${this.icons
         .map((icon) => {
           return html`
             <my-icon data-path=${icon.path} data-label=${icon.label} data-iconSrc=${icon.iconSrc}></my-icon>
@@ -21,6 +33,14 @@ export default class Icons extends WebComponent {
         })
         .join('')}
     `;
+  }
+
+  get icons() {
+    return JSON.parse(this.getAttribute('icons'));
+  }
+
+  set icons(value) {
+    this.setAttribute('icons', JSON.stringify(value));
   }
 
   handleClick(e) {
@@ -44,11 +64,28 @@ export default class Icons extends WebComponent {
 
   handleKeyDown(e) {
     const checkedEl = this.querySelectorAll('my-icon[checked]');
-
     if (e.key === 'Enter') {
       if (checkedEl.length > 1) return;
       if (!checkedEl) return;
       router.navigateTo(checkedEl[0].dataset.path);
     }
+  }
+
+  handleIconChange(e) {
+    const { path, label, iconSrc } = e.detail;
+    const prevIconIndex = this.icons.findIndex((icon) => icon.path === path);
+
+    if (prevIconIndex === -1) {
+      this.icons = [...this.icons, { path, label, iconSrc }];
+    } else {
+      const newIcons = [...this.icons];
+      newIcons[prevIconIndex] = { path, label, iconSrc };
+      this.icons = newIcons;
+    }
+  }
+
+  handleIconDelete(e) {
+    const { path } = e.detail;
+    this.icons = this.icons.filter((icon) => icon.path !== path);
   }
 }
