@@ -1,6 +1,6 @@
 import routes from '../utils/routes';
 
-const BASE_URL = '/js-sandbox';
+const BASE_URL = process.env.NODE_ENV === 'development' ? '' : '/js-sandbox';
 
 class Router {
   constructor(route) {
@@ -19,12 +19,12 @@ class Router {
   }
 
   navigateTo(url) {
-    window.history.pushState(null, null, url);
+    window.history.pushState(null, null, BASE_URL + url);
     this.render();
   }
 
   replaceTo(url) {
-    window.history.replaceState(null, null, url);
+    window.history.replaceState(null, null, BASE_URL + url);
     this.render();
   }
 

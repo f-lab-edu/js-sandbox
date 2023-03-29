@@ -2,6 +2,7 @@ import { html } from './utils';
 import tetris from '../../public/tetris.png';
 import flappyBird from '../../public/flappyBird.png';
 import notepad from '../../public/notepad.png';
+import sandboxDB from '../core/IndexedDB';
 
 const routes = [
   {
@@ -30,11 +31,21 @@ const routes = [
   },
 ];
 
-const icons = routes.reduce((prev, router) => {
+const mainIcons = routes.reduce((prev, router) => {
   const { path, label, iconSrc } = router;
   if (router.path === '/') return prev;
   return [...prev, { path, label, iconSrc }];
 }, []);
 
+const getLocalIcons = async () => {
+  const notepadData = await sandboxDB.getAllData('notepad');
+  const notepadIcons = notepadData.reduce((prev, icon) => {
+    const { id, title } = icon;
+    return [...prev, { path: `/notepad/${id}`, label: title, iconSrc: notepad }];
+  }, []);
+
+  return [...notepadIcons];
+};
+
 export default routes;
-export { icons };
+export { mainIcons, getLocalIcons };

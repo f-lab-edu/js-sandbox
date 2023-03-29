@@ -12,6 +12,22 @@ my-notepad {
     width: 100%;
     height: 100%;
   }
+
+  textarea {
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 5px;
+    background-color: #f0f0f0;
+    box-sizing: border-box;
+  }
+
+  textarea:focus {
+    outline: none;
+  }
 }
 
 my-notepad-header {
@@ -21,6 +37,10 @@ my-notepad-header {
   border-bottom: 1px solid #c0c0c0;
   font-size: 14px;
   user-select: none;
+
+  u {
+    pointer-events: none;
+  }
 
   & > header {
     display: flex;
@@ -62,10 +82,13 @@ my-notepad-header {
 
   .edit_buttons {
     display: flex;
+    width: fit-content;
 
-    & > my-notepad-button {
+    & > button {
       position: relative;
       padding: 2px 8px;
+      outline: none;
+      border: none;
 
       & > .popup {
         display: flex;
@@ -84,7 +107,7 @@ my-notepad-header {
           visibility: visible;
         }
 
-        & > .slot {
+        & > .sub {
           display: flex;
           padding: 3px 30px 3px 40px;
           justify-content: space-between;
@@ -106,27 +129,6 @@ my-notepad-header {
         background-color: #e0e0e0;
       }
     }
-  }
-}
-
-my-notepad-body {
-  display: block;
-  width: 100%;
-  height: 100%;
-
-  textarea {
-    width: 100%;
-    height: 100%;
-    border: none;
-    resize: none;
-    font-size: 12px;
-    padding: 5px;
-    background-color: #f0f0f0;
-    box-sizing: border-box;
-  }
-
-  textarea:focus {
-    outline: none;
   }
 }
 

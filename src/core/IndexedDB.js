@@ -26,17 +26,19 @@ class IndexedDB {
         resolve();
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
 
       request.onupgradeneeded = () => {
         this.db = request.result;
 
         this.stores.forEach((store) => {
-          if (!this.db.objectStoreNames.contains(store)) {
-            this.db.createObjectStore(store, { keyPath: 'id' });
+          if (this.db.objectStoreNames.contains(store)) {
+            this.db.deleteObjectStore(store);
           }
+          this.db.createObjectStore(store, { keyPath: 'id', autoIncrement: true });
         });
       };
     });
@@ -56,8 +58,9 @@ class IndexedDB {
         resolve(request.result);
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
     });
   }
@@ -75,8 +78,9 @@ class IndexedDB {
         resolve(request.result);
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
     });
   }
@@ -95,8 +99,9 @@ class IndexedDB {
         resolve(request.result);
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
     });
   }
@@ -115,13 +120,14 @@ class IndexedDB {
         resolve(request.result);
       };
 
-      request.onerror = (e) => {
-        reject(e);
+      request.onerror = () => {
+        console.log(request.error);
+        reject(request.error);
       };
     });
   }
 }
 
-const sandboxDB = new IndexedDB('sandbox', 1, ['notes']);
+const sandboxDB = new IndexedDB('sandboxDB', 2, ['notepad']);
 
 export default sandboxDB;

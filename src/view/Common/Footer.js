@@ -1,6 +1,6 @@
 import WebComponent from '../../core/WebComponent';
 import { html } from '../../utils/utils';
-import { icons } from '../../utils/routes';
+import { mainIcons } from '../../utils/routes';
 import router from '../../core/Router';
 import windowLogo from '../../../public/windowLogo.png';
 import searchIcon from '../../../public/searchIcon.png';
@@ -17,7 +17,7 @@ export default class Footer extends WebComponent {
       <div class="input_box">
         <img alt="search" src=${searchIcon} class="window_icon" /><input type="text" placeholder="찾기" />
       </div>
-      ${icons
+      ${mainIcons
         .map((icon) => {
           return html` <my-icon data-path="${icon.path}" data-iconSrc="${icon.iconSrc}"></my-icon> `;
         })
