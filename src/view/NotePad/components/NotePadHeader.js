@@ -14,12 +14,22 @@ export default class NotePadHeader extends WebComponent {
     this.removeEventListener('click', this.handleClick);
   }
 
+  static get observedAttributes() {
+    return ['title'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'title' && oldValue) {
+      this.querySelector('#title').innerText = newValue;
+    }
+  }
+
   injectHTML() {
     return html`
       <header>
         <span>
           <img alt="notepad_icon" src=${NotePadIcon} />
-          ${this.title} - Windows 메모장
+          <span id="title">${this.title}</span> - Windows 메모장
         </span>
         <div class="view_buttons">
           <button class="view_button" id="mini">🗕</button>
@@ -104,14 +114,8 @@ export default class NotePadHeader extends WebComponent {
   }
 
   closePopup() {
-    // const popups = this.querySelectorAll('.popup.show');
-    // popups.forEach((popup) => popup.classList.remove('show'));
     const popup = this.querySelector('.popup.show');
     popup?.classList.remove('show');
-  }
-
-  get title() {
-    return this.getAttribute('title');
   }
 
   get title() {
