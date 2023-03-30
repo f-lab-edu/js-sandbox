@@ -20,6 +20,7 @@ export default class NotePad extends WebComponent {
   disconnectedCallback() {
     this.removeEventListener('save', this.handleSave);
     this.removeEventListener('localSave', this.handleLocalSave);
+    this.removeEventListener('delete', this.handleDelete);
   }
 
   injectHTML() {
@@ -42,11 +43,11 @@ export default class NotePad extends WebComponent {
   }
 
   async handleSave(e) {
-    try {
-      e.stopPropagation();
-      const notePadData = this.getNotePadData();
-      if (!notePadData) return;
+    e.stopPropagation();
+    const notePadData = this.getNotePadData();
+    if (!notePadData) return;
 
+    try {
       const result = await sandboxDB.upsertData('notepad', notePadData);
 
       const path = `/notepad/${result}`;
@@ -55,15 +56,14 @@ export default class NotePad extends WebComponent {
       const iconChangeEvent = new CustomEvent('iconChange', {
         detail: {
           path,
-          label: notePadData.title.replace(/ /g, '&nbsp;'),
+          label: notePadData,
           iconSrc: NotePadIcon,
         },
       });
       document.querySelector('my-icons').dispatchEvent(iconChangeEvent);
 
       if (this.id === result) {
-        this.data = notePadData;
-        this.render();
+        this.title = notePadData.title.replace(/&nbsp/g, ' ');
       } else {
         router.navigateTo(path);
       }
@@ -119,5 +119,9 @@ export default class NotePad extends WebComponent {
 
   get id() {
     return Number(this.getAttribute('data-id'));
+  }
+
+  set title(title) {
+    this.querySelector('my-notepad-header').setAttribute('title', title);
   }
 }
