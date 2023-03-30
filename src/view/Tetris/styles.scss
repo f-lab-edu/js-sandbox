@@ -8,6 +8,17 @@ my-tetris {
   background-color: #1a1a1a;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+
+  .score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
 }
 
 .board {
@@ -21,11 +32,35 @@ my-tetris {
   border: 1px solid #c0c0c0;
   box-sizing: border-box;
 
-  .cell-0 {
+  .cell-empty {
     background-color: #f0f0f0;
   }
 
-  .cell-1 {
+  .cell-I {
+    background-color: #00ffff;
+  }
+
+  .cell-J {
+    background-color: #0000ff;
+  }
+
+  .cell-L {
+    background-color: #ff7f00;
+  }
+
+  .cell-O {
+    background-color: #ffff00;
+  }
+
+  .cell-S {
+    background-color: #00ff00;
+  }
+
+  .cell-T {
+    background-color: #800080;
+  }
+
+  .cell-Z {
     background-color: #ff0000;
   }
 

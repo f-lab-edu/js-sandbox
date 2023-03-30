@@ -1,7 +1,7 @@
 import WebComponent from '../../core/WebComponent';
 import { html } from '../../utils/utils';
 import './styles.scss';
-import { BOARD_HEIGHT, BOARD_WIDTH } from './const';
+import { BLOCK_CLASSES, BOARD_HEIGHT, BOARD_WIDTH } from './const';
 import Tetromino from './class/Tetromino';
 
 export default class Tetris extends WebComponent {
@@ -10,6 +10,7 @@ export default class Tetris extends WebComponent {
     this.board = this.getInitialBoard(BOARD_WIDTH, BOARD_HEIGHT);
     this.start = false;
     this.tetromino = null;
+    this.score = 0;
     this.startGame = this.startGame.bind(this);
     this.keydownHandler = this.keydownHandler.bind(this);
   }
@@ -27,13 +28,13 @@ export default class Tetris extends WebComponent {
           .map(
             (row) => html`
               <ul>
-                ${row.map((col) => html`<li class="cell-${col}"></li>`).join('')}
+                ${row.map((col) => html`<li class="cell-${BLOCK_CLASSES[col]}"></li>`).join('')}
               </ul>
             `
           )
           .join('')}
       </div>
-      <div>추후 추가될 공간입니다.</div>
+      <span class="score">${this.score}</span>
     `;
   }
 
@@ -61,22 +62,22 @@ export default class Tetris extends WebComponent {
 
   keydownHandler(e) {
     const prevTetromino = this.tetromino.clone();
+    const newBoard = this.board;
 
     if (e.key === 'ArrowDown') {
-      this.tetromino.moveDown(this.board);
+      this.tetromino.moveDown(newBoard);
     } else if (e.key === 'ArrowUp') {
-      this.tetromino.rotate();
+      this.tetromino.rotate(newBoard);
     } else if (e.key === 'ArrowLeft') {
-      this.tetromino.moveLeft(this.board);
+      this.tetromino.moveLeft(newBoard);
     } else if (e.key === 'ArrowRight') {
-      this.tetromino.moveRight(this.board);
+      this.tetromino.moveRight(newBoard);
     }
 
-    this.updateBoard(prevTetromino);
+    this.updateBoard(newBoard, prevTetromino);
   }
 
-  updateBoard(prevTetromino = null) {
-    const newBoard = this.board;
+  updateBoard(newBoard = this.board, prevTetromino = null) {
     if (prevTetromino) {
       this.removeOldBlock(prevTetromino, newBoard);
     }
@@ -90,7 +91,7 @@ export default class Tetris extends WebComponent {
 
     block.forEach((row, i) => {
       row.forEach((col, j) => {
-        if (col === 1) {
+        if (newBoard[y + i]?.[x + j] === col) {
           // eslint-disable-next-line no-param-reassign
           newBoard[y + i][x + j] = 0;
         }
@@ -103,9 +104,9 @@ export default class Tetris extends WebComponent {
 
     block.forEach((row, i) => {
       row.forEach((col, j) => {
-        if (col === 1) {
+        if (col !== 0) {
           // eslint-disable-next-line no-param-reassign
-          newBoard[y + i][x + j] = 1;
+          newBoard[y + i][x + j] = col;
         }
       });
     });
