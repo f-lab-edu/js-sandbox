@@ -33,7 +33,7 @@ const routes = [
   },
   {
     path: `${BASE_URL}/notepad/:id`,
-    html: html`<my-notepad id=":id"></my-notepad>`,
+    html: html`<my-notepad data-id=":id"></my-notepad>`,
     label: 'Note&nbsp;Pad',
     iconSrc: null,
   },

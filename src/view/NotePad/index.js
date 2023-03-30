@@ -3,6 +3,7 @@ import { html } from '../../utils/utils';
 import './styles.scss';
 import sandboxDB from '../../core/IndexedDB';
 import NotePadIcon from '../../../public/notepad.png';
+import router from '../../core/Router';
 
 export default class NotePad extends WebComponent {
   async connectedCallback() {
@@ -19,6 +20,7 @@ export default class NotePad extends WebComponent {
   disconnectedCallback() {
     this.removeEventListener('save', this.handleSave);
     this.removeEventListener('localSave', this.handleLocalSave);
+    this.removeEventListener('delete', this.handleDelete);
   }
 
   injectHTML() {
@@ -41,13 +43,12 @@ export default class NotePad extends WebComponent {
   }
 
   async handleSave(e) {
-    try {
-      e.stopPropagation();
-      const notePadData = this.getNotePadData();
-      if (!notePadData) return;
+    e.stopPropagation();
+    const notePadData = this.getNotePadData();
+    if (!notePadData) return;
 
+    try {
       const result = await sandboxDB.upsertData('notepad', notePadData);
-      if (!result) return;
 
       const path = `/notepad/${result}`;
 
@@ -55,12 +56,17 @@ export default class NotePad extends WebComponent {
       const iconChangeEvent = new CustomEvent('iconChange', {
         detail: {
           path,
-          label: notePadData.title.replace(/ /g, '&nbsp;'),
+          label: notePadData,
           iconSrc: NotePadIcon,
         },
       });
       document.querySelector('my-icons').dispatchEvent(iconChangeEvent);
-      router.navigateTo(path);
+
+      if (this.id === result) {
+        this.title = notePadData.title.replace(/&nbsp/g, ' ');
+      } else {
+        router.navigateTo(path);
+      }
     } catch (err) {
       alert('저장에 실패했습니다.');
     }
@@ -107,11 +113,15 @@ export default class NotePad extends WebComponent {
     return {
       id: this.id,
       title: title.trim().replace(/ /g, '&nbsp;'),
-      content: content.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;'),
+      content: content.replace(/ /g, '&nbsp;'),
     };
   }
 
   get id() {
-    return Number(this.getAttribute('id'));
+    return Number(this.getAttribute('data-id'));
+  }
+
+  set title(title) {
+    this.querySelector('my-notepad-header').setAttribute('title', title);
   }
 }
