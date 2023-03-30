@@ -56,14 +56,14 @@ export default class NotePad extends WebComponent {
       const iconChangeEvent = new CustomEvent('iconChange', {
         detail: {
           path,
-          label: notePadData,
+          label: notePadData.title,
           iconSrc: NotePadIcon,
         },
       });
       document.querySelector('my-icons').dispatchEvent(iconChangeEvent);
 
       if (this.id === result) {
-        this.title = notePadData.title.replace(/&nbsp/g, ' ');
+        this.title = notePadData.title.replace(/&nbsp;/g, ' ');
       } else {
         router.navigateTo(path);
       }

@@ -11,7 +11,9 @@ class Router {
 
   render() {
     const currentPath = window.location.pathname;
-    const route = this.routes.find((value) => this.pathToRegexp(value.path).test(currentPath));
+    const route = this.routes.find((value) => {
+      return this.pathToRegexp(this.getUrlFrom(value.path)).test(currentPath);
+    });
 
     if (!route) {
       this.replaceTo('/');
@@ -26,8 +28,7 @@ class Router {
   }
 
   navigateTo(url) {
-    const basedUrl = `${BASE_URL}${url}`;
-    if (basedUrl === window.location.pathname) return;
+    if (this.getUrlFrom(url) === window.location.pathname) return;
     window.history.pushState(null, null, BASE_URL + url);
     this.render();
   }
@@ -35,6 +36,10 @@ class Router {
   replaceTo(url) {
     window.history.replaceState(null, null, BASE_URL + url);
     this.render();
+  }
+
+  getUrlFrom(url) {
+    return `${BASE_URL}${url}`;
   }
 
   back() {
