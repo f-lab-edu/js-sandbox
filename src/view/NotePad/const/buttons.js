@@ -85,13 +85,13 @@ function handleLocalSaveClick() {
 
 function handleDeleteClick() {
   const notepad = document.querySelector('my-notepad');
-  if (!notepad['data-id']) return;
+  if (!notepad.getAttribute('data-id')) return;
   this.dispatchEvent(new CustomEvent('delete', { bubbles: true }));
 }
 
 function handleNewClick() {
   const notepad = document.querySelector('my-notepad');
-  if (!notepad['data-id']) {
+  if (!notepad.getAttribute('data-id')) {
     notepad.render();
     return;
   }

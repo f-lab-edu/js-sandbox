@@ -8,31 +8,31 @@ const BASE_URL = process.env.NODE_ENV === 'development' ? '' : '/js-sandbox';
 
 const routes = [
   {
-    path: `${BASE_URL}/`,
+    path: `/`,
     html: html`<my-home></my-home>`,
     label: 'Home',
     iconSrc: null,
   },
   {
-    path: `${BASE_URL}/tetris`,
+    path: `/tetris`,
     html: html`<my-tetris></my-tetris>`,
     label: 'Tetris',
     iconSrc: tetris,
   },
   {
-    path: `${BASE_URL}/flappybird`,
+    path: `/flappybird`,
     html: html`<my-flappybird></my-flappybird>`,
     label: 'Flappy&nbsp;Bird',
     iconSrc: flappyBird,
   },
   {
-    path: `${BASE_URL}/notepad`,
+    path: `/notepad`,
     html: html`<my-notepad></my-notepad>`,
     label: 'Note&nbsp;Pad',
     iconSrc: notepad,
   },
   {
-    path: `${BASE_URL}/notepad/:id`,
+    path: `/notepad/:id`,
     html: html`<my-notepad data-id=":id"></my-notepad>`,
     label: 'Note&nbsp;Pad',
     iconSrc: null,
