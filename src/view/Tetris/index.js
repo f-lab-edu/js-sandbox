@@ -11,8 +11,13 @@ export default class Tetris extends WebComponent {
     this.start = false;
     this.tetromino = null;
     this.score = 0;
+    this.lastTime = null;
+    this.dropInterval = 1000;
+    this.tetrominoCounter = 0;
+    this.animationId = null;
     this.startGame = this.startGame.bind(this);
     this.keydownHandler = this.keydownHandler.bind(this);
+    this.dropBlock = this.dropBlock.bind(this);
   }
 
   connectedCallback() {
@@ -55,9 +60,38 @@ export default class Tetris extends WebComponent {
   startGame() {
     if (this.start) return;
     this.start = true;
-    this.tetromino = new Tetromino();
+    this.tetromino = new Tetromino(this);
+    this.tetrominoCounter += 1;
     this.updateBoard();
     document.addEventListener('keydown', this.keydownHandler);
+
+    this.lastTime = performance.now();
+    requestAnimationFrame(this.dropBlock);
+  }
+
+  stopGame() {
+    this.start = false;
+    this.board = this.getInitialBoard(BOARD_WIDTH, BOARD_HEIGHT);
+    this.tetrominoCounter = 0;
+    this.dropInterval = 1000;
+    cancelAnimationFrame(this.animationId);
+    document.removeEventListener('keydown', this.keydownHandler);
+  }
+
+  dropBlock(timestamp) {
+    const deltaTime = timestamp - this.lastTime;
+
+    if (deltaTime > this.dropInterval) {
+      const prevTetromino = this.tetromino.clone();
+      const newBoard = this.board;
+      this.tetromino.moveDown(newBoard);
+      this.updateBoard(newBoard, prevTetromino);
+      this.lastTime = timestamp;
+    }
+
+    if (this.start) {
+      this.animationId = requestAnimationFrame(this.dropBlock);
+    }
   }
 
   keydownHandler(e) {

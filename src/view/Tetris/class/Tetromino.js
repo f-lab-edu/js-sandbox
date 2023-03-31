@@ -1,7 +1,12 @@
 import { BLOCKS, BOARD_HEIGHT, BOARD_WIDTH, SCORES } from '../const';
 
 export default class Tetromino {
-  constructor() {
+  constructor($board) {
+    this.createNewBlock();
+    this.$board = $board;
+  }
+
+  createNewBlock() {
     this.block = Object.values(BLOCKS)[Math.floor(Math.random() * 7)];
     const initialBlockPos = this.getInitialBlockPos(BOARD_WIDTH, this.block);
     this.x = initialBlockPos.x;
@@ -50,8 +55,14 @@ export default class Tetromino {
   moveDown(board) {
     if (this.canMove(board, this.x, this.y + 1, this.block)) {
       this.y += 1;
+    } else if (this.y === 0) {
+      this.freeze(board);
+      this.$board.stopGame();
     } else {
       this.freeze(board);
+      this.scoreUp(this.removeFullRows(board));
+      this.speedUp();
+      this.createNewBlock();
     }
   }
 
@@ -64,26 +75,32 @@ export default class Tetromino {
         }
       });
     });
-
-    const clearedRows = this.removeFullRows(board);
-    document.querySelector('my-tetris').score += SCORES[clearedRows] ?? 0;
-
-    this.block = Object.values(BLOCKS)[Math.floor(Math.random() * 7)];
-    const initialBlockPos = this.getInitialBlockPos(BOARD_WIDTH, this.block);
-    this.x = initialBlockPos.x;
-    this.y = initialBlockPos.y;
   }
 
   removeFullRows(board) {
-    let clearedRows = 0;
+    let result = 0;
     board.forEach((row, i) => {
       if (row.every((cell) => cell >= 10)) {
-        clearedRows += 1;
+        result += 1;
         board.splice(i, 1);
         board.unshift(Array(BOARD_WIDTH).fill(0));
       }
     });
-    return clearedRows;
+    return result;
+  }
+
+  speedUp() {
+    if (this.$board.tetrominoCounter === 10) {
+      this.$board.tetrominoCounter = 0;
+      this.$board.dropInterval *= 0.9;
+    }
+    this.$board.tetrominoCounter += 1;
+  }
+
+  scoreUp(clearedRows) {
+    if (clearedRows > 0) {
+      this.$board.score += SCORES[clearedRows] ?? 0;
+    }
   }
 
   canMove(board, x, y, block) {
