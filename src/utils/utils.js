@@ -2,13 +2,8 @@ const renderRaw = (string, ...values) => {
   return String.raw(string, ...values);
 };
 
-/**
- * @param {number} times
- * @param {function} callback
- * @returns {string}
- */
-const repeat = (times, callback) => {
-  return new Array(times).fill('').map(callback).join('');
+const shuffle = (array) => {
+  return array.sort(() => Math.random() - 0.5);
 };
 
-export { renderRaw as html, renderRaw as css, repeat };
+export { renderRaw as html, renderRaw as css, shuffle };

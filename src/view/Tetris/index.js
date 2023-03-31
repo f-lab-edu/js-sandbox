@@ -39,8 +39,32 @@ export default class Tetris extends WebComponent {
           )
           .join('')}
       </div>
-      <span class="score">${this.score}</span>
+      <div class="tetromino-previews">
+        ${this.nextTetrominos
+          .map(
+            (tetromino) => html`
+              <div class="tetromino-preview">
+                ${tetromino
+                  .map(
+                    (row) => html`
+                      <ul class="tetromino-preview-row">
+                        ${row.map((cell) => html`<li class="cell-${BLOCK_CLASSES[cell]}"></li>`).join('')}
+                      </ul>
+                    `
+                  )
+                  .join('')}
+              </div>
+            `
+          )
+          .join('')}
+      </div>
+
+      <!--      <div class="score">점수: <span class="score">${this.score}</span></div>-->
     `;
+  }
+
+  get nextTetrominos() {
+    return Tetromino.getNextTetrominos();
   }
 
   static get observedAttributes() {
