@@ -1,15 +1,28 @@
-import { BLOCKS, BOARD_HEIGHT, BOARD_WIDTH, SCORES } from '../const';
-import { shuffle } from '../../../utils/utils';
+import { BLOCKS, BOARD_HEIGHT, BOARD_WIDTH } from '../const';
+import { createShuffleBlockQueue, getInitialBlockPos } from '../utils';
+
+export const FREEZE = 'freeze';
+export const CREATE_NEW_BLOCK = 'createNewBlock';
 
 export default class Tetromino {
-  static blockQueue = Tetromino.createShuffleBlockQueue();
-
-  static createShuffleBlockQueue() {
-    return shuffle(Object.values(BLOCKS));
-  }
+  static blockQueue = createShuffleBlockQueue(BLOCKS);
 
   static getNextTetrominos() {
-    return Tetromino.blockQueue.slice(0, 3);
+    return Tetromino.blockQueue.slice(0, 5);
+  }
+
+  static observers = { [CREATE_NEW_BLOCK]: [], [FREEZE]: [] };
+
+  static subscribe(event, observer) {
+    Tetromino.observers[event].push(observer);
+  }
+
+  static notify(event) {
+    Tetromino.observers[event].forEach((observer) => observer());
+  }
+
+  static unsubscribe(event, observer) {
+    Tetromino.observers[event] = Tetromino.observers[event].filter((o) => o !== observer);
   }
 
   constructor($board, createBlock = true) {
@@ -22,16 +35,18 @@ export default class Tetromino {
   createNewBlock() {
     this.block = Tetromino.blockQueue.shift();
 
-    if (Tetromino.blockQueue.length < 3) {
-      Tetromino.blockQueue = Tetromino.blockQueue.concat(Tetromino.createShuffleBlockQueue());
+    if (Tetromino.blockQueue.length < 5) {
+      Tetromino.blockQueue = Tetromino.blockQueue.concat(createShuffleBlockQueue(BLOCKS));
     }
 
-    const initialBlockPos = this.getInitialBlockPos(BOARD_WIDTH, this.block);
+    const initialBlockPos = getInitialBlockPos(BOARD_WIDTH, this.block);
     this.x = initialBlockPos.x;
     this.y = initialBlockPos.y;
+
+    Tetromino.notify(CREATE_NEW_BLOCK);
   }
 
-  rotate(board) {
+  rotate() {
     const rotatedBlock = this.block[0].map((_, i) => this.block.map((row) => row[i]).reverse());
     const rotatedWidth = rotatedBlock[0].length;
     const rotatedHeight = rotatedBlock.length;
@@ -51,83 +66,63 @@ export default class Tetromino {
       newY = 0;
     }
 
-    if (this.canMove(board, newX, newY, rotatedBlock)) {
+    if (this.canMove(newX, newY, rotatedBlock)) {
       this.block = rotatedBlock;
       this.x = newX;
       this.y = newY;
     }
   }
 
-  moveLeft(board) {
-    if (this.canMove(board, this.x - 1, this.y, this.block)) {
+  moveLeft() {
+    if (this.canMove(this.x - 1, this.y, this.block)) {
       this.x -= 1;
     }
   }
 
-  moveRight(board) {
-    if (this.canMove(board, this.x + 1, this.y, this.block)) {
+  moveRight() {
+    if (this.canMove(this.x + 1, this.y, this.block)) {
       this.x += 1;
     }
   }
 
-  moveDown(board) {
-    if (this.canMove(board, this.x, this.y + 1, this.block)) {
+  moveDown() {
+    if (this.canMove(this.x, this.y + 1, this.block)) {
       this.y += 1;
     } else if (this.y === 0) {
-      this.freeze(board);
+      this.freeze();
       this.$board.stopGame();
     } else {
-      this.freeze(board);
-      this.scoreUp(this.removeFullRows(board));
-      this.speedUp();
+      this.freeze();
       this.createNewBlock();
     }
   }
 
-  freeze(board) {
+  freeze() {
     const { block, x, y } = this;
     block.forEach((row, i) => {
       row.forEach((col, j) => {
         if (col !== 0) {
-          board[y + i][x + j] = col * 10;
+          this.$board.data[y + i][x + j] = col * 10;
         }
       });
     });
+
+    Tetromino.notify(FREEZE);
   }
 
-  removeFullRows(board) {
-    let result = 0;
-    board.forEach((row, i) => {
-      if (row.every((cell) => cell >= 10)) {
-        result += 1;
-        board.splice(i, 1);
-        board.unshift(Array(BOARD_WIDTH).fill(0));
-      }
-    });
-    return result;
-  }
-
-  speedUp() {
-    if (this.$board.tetrominoCounter === 10) {
-      this.$board.tetrominoCounter = 0;
-      this.$board.dropInterval *= 0.9;
-    }
-    this.$board.tetrominoCounter += 1;
-  }
-
-  scoreUp(clearedRows) {
-    if (clearedRows > 0) {
-      this.$board.score += SCORES[clearedRows] ?? 0;
-    }
-  }
-
-  canMove(board, x, y, block) {
+  canMove(x, y, block) {
     for (let row = 0; row < block.length; row += 1) {
       for (let col = 0; col < block[row].length; col += 1) {
         if (block[row][col] !== 0) {
           const nextX = x + col;
           const nextY = y + row;
-          if (nextX < 0 || nextX >= BOARD_WIDTH || nextY < 0 || nextY >= BOARD_HEIGHT || board[nextY][nextX] >= 10) {
+          if (
+            nextX < 0 ||
+            nextX >= BOARD_WIDTH ||
+            nextY < 0 ||
+            nextY >= BOARD_HEIGHT ||
+            this.$board.data[nextY][nextX] >= 10
+          ) {
             return false;
           }
         }
@@ -135,15 +130,6 @@ export default class Tetromino {
     }
 
     return true;
-  }
-
-  getInitialBlockPos(width, block) {
-    const firstNonEmptyRowIndex = block.findIndex((row) => row.some((cell) => cell !== 0));
-
-    return {
-      x: Math.floor((width - block[0].length) / 2),
-      y: -firstNonEmptyRowIndex,
-    };
   }
 
   clone() {

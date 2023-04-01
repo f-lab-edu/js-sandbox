@@ -10,6 +10,8 @@ import Icon from './view/Common/Icon';
 import NotePad from './view/NotePad';
 import NotePadHeader from './view/NotePad/components/NotePadHeader';
 import router from './core/Router';
+import TetrisBoard from './view/Tetris/components/TetrisBoard';
+import TetrisPreview from './view/Tetris/components/TetrisPreview';
 
 (async () => {
   try {
@@ -22,6 +24,8 @@ import router from './core/Router';
   customElements.define('my-footer', Footer);
   customElements.define('my-home', Home);
   customElements.define('my-tetris', Tetris);
+  customElements.define('my-tetris-board', TetrisBoard);
+  customElements.define('my-tetris-preview', TetrisPreview);
   customElements.define('my-flappybird', FlappyBird);
   customElements.define('my-icons', Icons);
   customElements.define('my-icon', Icon);

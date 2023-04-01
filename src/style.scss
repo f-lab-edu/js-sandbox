@@ -173,7 +173,7 @@ my-app {
 
   #page {
     display: flex;
-    height: 100%;
+    height: calc(100% - 45px);
     width: 100%;
 
     & > * {
@@ -183,7 +183,6 @@ my-app {
 
   & > my-icons {
     display: flex;
-    height: calc(100% - 45px);
     flex-wrap: wrap;
     flex-direction: column;
     position: absolute;
