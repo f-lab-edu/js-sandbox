@@ -1,13 +1,92 @@
 $cell-size: 40px;
 
+.cell-I {
+  background-color: #00ffff;
+}
+
+.cell-J {
+  background-color: #0000ff;
+}
+
+.cell-L {
+  background-color: #ff7f00;
+}
+
+.cell-O {
+  background-color: #ffff00;
+}
+
+.cell-S {
+  background-color: #00ff00;
+}
+
+.cell-T {
+  background-color: #800080;
+}
+
+.cell-Z {
+  background-color: #ff0000;
+}
+
 my-tetris {
+  display: flex;
+  justify-content: space-around;
   width: 100%;
   height: 100%;
   padding: 10px;
   box-sizing: border-box;
   background-color: #1a1a1a;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    height: $cell-size;
+
+    & > li {
+      list-style: none;
+      width: $cell-size;
+      height: $cell-size;
+      border: 1px solid #c0c0c0;
+    }
+  }
+
+  .board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: $cell-size * 10;
+    height: $cell-size * 20;
+    background-color: #f0f0f0;
+    border: 1px solid #c0c0c0;
+  }
+
+  .tetromino-previews {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    border: 1px solid #c0c0c0;
+    width: $cell-size * 4;
+    box-sizing: content-box;
+    padding: 20px;
+
+    .tetromino-preview {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: $cell-size * 4;
+      height: $cell-size * 4;
+    }
+
+    .cell-empty {
+      border: none;
+    }
+  }
 
   .score {
     display: flex;
@@ -18,68 +97,5 @@ my-tetris {
     font-size: 20px;
     font-weight: bold;
     text-align: center;
-  }
-}
-
-.board {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  align-items: center;
-  width: $cell-size * 10;
-  height: $cell-size * 20;
-  background-color: #f0f0f0;
-  border: 1px solid #c0c0c0;
-  box-sizing: border-box;
-
-  .cell-empty {
-    background-color: #f0f0f0;
-  }
-
-  .cell-I {
-    background-color: #00ffff;
-  }
-
-  .cell-J {
-    background-color: #0000ff;
-  }
-
-  .cell-L {
-    background-color: #ff7f00;
-  }
-
-  .cell-O {
-    background-color: #ffff00;
-  }
-
-  .cell-S {
-    background-color: #00ff00;
-  }
-
-  .cell-T {
-    background-color: #800080;
-  }
-
-  .cell-Z {
-    background-color: #ff0000;
-  }
-
-  &,
-  * {
-    list-style: none;
-    box-sizing: border-box;
-  }
-
-  & > ul {
-    padding: 0;
-    margin: 0;
-    display: flex;
-    height: $cell-size;
-
-    & > li {
-      width: $cell-size;
-      height: $cell-size;
-      border: 1px solid #c0c0c0;
-    }
   }
 }

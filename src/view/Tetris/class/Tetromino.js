@@ -1,13 +1,31 @@
 import { BLOCKS, BOARD_HEIGHT, BOARD_WIDTH, SCORES } from '../const';
+import { shuffle } from '../../../utils/utils';
 
 export default class Tetromino {
-  constructor($board) {
-    this.createNewBlock();
+  static blockQueue = Tetromino.createShuffleBlockQueue();
+
+  static createShuffleBlockQueue() {
+    return shuffle(Object.values(BLOCKS));
+  }
+
+  static getNextTetrominos() {
+    return Tetromino.blockQueue.slice(0, 3);
+  }
+
+  constructor($board, createBlock = true) {
     this.$board = $board;
+    if (createBlock) {
+      this.createNewBlock();
+    }
   }
 
   createNewBlock() {
-    this.block = Object.values(BLOCKS)[Math.floor(Math.random() * 7)];
+    this.block = Tetromino.blockQueue.shift();
+
+    if (Tetromino.blockQueue.length < 3) {
+      Tetromino.blockQueue = Tetromino.blockQueue.concat(Tetromino.createShuffleBlockQueue());
+    }
+
     const initialBlockPos = this.getInitialBlockPos(BOARD_WIDTH, this.block);
     this.x = initialBlockPos.x;
     this.y = initialBlockPos.y;
@@ -129,7 +147,7 @@ export default class Tetromino {
   }
 
   clone() {
-    const cloned = new Tetromino();
+    const cloned = new Tetromino(this.$board, false);
     cloned.block = this.block.map((row) => [...row]);
     cloned.x = this.x;
     cloned.y = this.y;
